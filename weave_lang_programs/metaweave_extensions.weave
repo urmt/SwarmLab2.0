@@ -1,0 +1,10 @@
+// Example of Metaweave proposing new primitives dynamically
+
+metaweave {
+    propose sense_wind
+    add_parameter wind_speed
+}
+
+tension {
+    sense_wind(wind_speed) > 0.3 => act(adjust_orientation)
+}
