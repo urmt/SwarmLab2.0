@@ -1,0 +1,7 @@
+; Godot project configuration file (simplified)
+
+[application]
+
+config/name="SwarmLab2.0"
+config/description="SwarmLab experiment integrating WeaveLang with Godot 4.3"
+run/main_scene="res://scenes/swarm_lab.tscn"
