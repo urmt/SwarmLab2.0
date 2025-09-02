@@ -1,0 +1,9 @@
+[package]
+name = "rust_godot_integration"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gdnative = "0.10"
+weave_lang = { path = "../weave_lang" }
+rand = "0.8"
