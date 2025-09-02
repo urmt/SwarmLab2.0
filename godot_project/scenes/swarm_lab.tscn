@@ -1,0 +1,9 @@
+[gd_scene load_steps=4 format=3 uid="uid://swarm_lab_scene"]
+
+[node name="SwarmLab" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Environment" type="Node2D" parent="."]
+[node name="LightSource" type="Light2D" parent="Environment"]
+position = Vector2(400, 300)
+energy = 1.0
