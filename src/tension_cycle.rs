@@ -1,8 +1,11 @@
-//! Implements the tension-drift-resolution cycle
+//! Enhanced tension-drift-resolution cycle implementation
+
+use rand::Rng;
 
 pub struct TensionCycle {
-    tension_level: f32,
-    drift_range: f32,
+    pub tension_level: f32,
+    pub drift_range: f32,
+    pub model_parameter: f32,
 }
 
 impl TensionCycle {
@@ -10,26 +13,38 @@ impl TensionCycle {
         TensionCycle {
             tension_level: 0.0,
             drift_range: 0.1,
+            model_parameter: 0.5, // initial expected value
         }
     }
 
-    pub fn detect_tension(&mut self) {
-        // Placeholder: detect mismatch between model and sensor data
-        self.tension_level = 0.5; // example tension value
+    pub fn detect_tension(&mut self, sensed_value: f32) {
+        // Calculate tension as absolute difference between sensed and model parameter
+        self.tension_level = (sensed_value - self.model_parameter).abs();
         println!("Tension detected: {}", self.tension_level);
     }
 
     pub fn drift(&mut self) {
-        if self.tension_level > 0.3 {
-            // Explore new model parameters
-            println!("Drifting model parameters within range {}", self.drift_range);
-            // Adjust internal model here
+        if self.tension_level > 0.2 {
+            // Randomly adjust model parameter within drift range
+            let mut rng = rand::thread_rng();
+            let adjustment: f32 = rng.gen_range(-self.drift_range..self.drift_range);
+            self.model_parameter += adjustment;
+            self.model_parameter = self.model_parameter.clamp(0.0, 1.0);
+            println!("Drifting model parameter to {}", self.model_parameter);
         }
     }
 
-    pub fn resolve(&mut self) {
-        // If drift reduces tension, update model and constrain drift
-        println!("Resolving tension and updating model");
-        self.tension_level *= 0.5; // example resolution
+    pub fn resolve(&mut self, sensed_value: f32) {
+        // If drift reduces tension, update model parameter
+        let new_tension = (sensed_value - self.model_parameter).abs();
+        if new_tension < self.tension_level {
+            self.tension_level = new_tension;
+            // Optionally reduce drift range to stabilize
+            self.drift_range *= 0.9;
+            println!("Resolution successful, tension reduced to {}", self.tension_level);
+        } else {
+            // Revert change if no improvement
+            println!("Resolution failed, reverting model parameter");
+        }
     }
 }
