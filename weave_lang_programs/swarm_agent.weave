@@ -1,0 +1,17 @@
+grams/swarm_agent.weave
+// Sample WeaveLang program for a swarm agent implementing tension-drift-resolution
+
+tension {
+    sense(light_intensity) < 0.5 => act(move_forward)
+    sense(light_intensity) > 0.8 => act(move_backward)
+}
+
+drift {
+    // Explore new parameters when tension is high
+    adjust_parameter(light_threshold, random_variation)
+}
+
+resolution {
+    constrain(light_threshold, 0.4, 0.9)
+    update_model(light_threshold)
+}
