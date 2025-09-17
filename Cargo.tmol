@@ -1,18 +1,19 @@
 [package]
 name = "weave_lang"
-version = "0.1.1"  # Bumped for updates
+version = "0.1.1"
 edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 ndarray = "0.15"
 rand = "0.8"
-
-[dev-dependencies]
-# No additional dev dependencies needed yet
+godot = { version = "0.9", features = ["serde"] }  # Godot-Rust bindings
 
 [features]
 default = []
-gradient = ["ndarray"]  # Use ndarray for gradient computations
-parser = []             # Placeholder for future nom integration
+gradient = ["ndarray"]
+parser = []
