@@ -81,7 +81,7 @@ Push to the branch (git push origin feature-name).
 Open a Pull Request with a clear description of SFH-related improvements.
 
 Contact
-For questions or collaboration, contact Mark Rowe Traver at mark.traver@aurora.edu or open an issue on this repository.
+For questions or collaboration, contact Mark Rowe Traver at thesfh@proton.me or open an issue on this repository.
 Acknowledgments
 
 Inspired by The Sentience-Field Hypothesis by Mark Rowe Traver (2025).
