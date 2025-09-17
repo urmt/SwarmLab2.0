@@ -22,6 +22,15 @@ impl Interpreter {
         }
     }
 
+    pub fn should_move_forward(&self) -> bool {
+        self.tension_cycle.tension_level > 0.6 && self.tension_cycle.model_parameter < 0.5
+    }
+
+    pub fn should_move_backward(&self) -> bool {
+        self.tension_cycle.tension_level > 0.6 && self.tension_cycle.model_parameter > 0.5
+        }
+    }
+    
     pub fn execute(&mut self, input: &str) {
         // Parse WeaveLang code (simplified parser)
         let mut lines = input.lines();
