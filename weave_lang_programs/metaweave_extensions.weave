@@ -1,10 +1,15 @@
-// Example of Metaweave proposing new primitives dynamically
+// Example of Metaweave proposing new primitives dynamically with SFH alignment
 
 metaweave {
     propose sense_wind
     add_parameter wind_speed
+    set_qualic C_q = 0.7    // Initialize coherence proxy
+    set_qualic F_q = 0.6    // Initialize fertility proxy
+    partition kmax = 10     // Define qualic partition depth
 }
 
 tension {
-    sense_wind(wind_speed) > 0.3 => act(adjust_orientation)
+    qualic J_q = alpha * C_q + beta * F_q  // Compute J(q) dynamically
+    sense_wind(wind_speed) > 0.3 && J_q < 0.5 => act(adjust_orientation)
+    // Act only if wind is high and qualic tension is low
 }
