@@ -14,5 +14,12 @@ func _ready():
         agents.append(agent_instance)
 
 func _process(delta):
-    # Update swarm-level logic if needed
-    pass
+    # Simple flocking: Align agents toward average position
+    var avg_pos = Vector2.ZERO
+    for agent in agents:
+        avg_pos += agent.position
+    if agents.size() > 0:
+        avg_pos /= agents.size()
+    for agent in agents:
+        var dir_to_center = (avg_pos - agent.position).normalized()
+        agent.rotation = dir_to_center.angle()
