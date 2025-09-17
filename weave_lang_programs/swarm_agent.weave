@@ -1,17 +1,27 @@
-grams/swarm_agent.weave
-// Sample WeaveLang program for a swarm agent implementing tension-drift-resolution
+// Sample WeaveLang program for a swarm agent implementing tension-drift-resolution with SFH alignment
 
 tension {
-    sense(light_intensity) < 0.5 => act(move_forward)
-    sense(light_intensity) > 0.8 => act(move_backward)
+    qualic C_q = 0.5        // Default coherence proxy
+    qualic F_q = 0.7        // Default fertility proxy
+    qualic J_q = alpha * C_q + beta * F_q  // SFH functional
+    sense(light_intensity) < 0.5 && J_q > 0.6 => act(move_forward)
+    sense(light_intensity) > 0.8 && J_q < 0.4 => act(move_backward)
+    // Actions triggered by both sensor and qualic state
 }
 
 drift {
-    // Explore new parameters when tension is high
-    adjust_parameter(light_threshold, random_variation)
+    // Explore new parameters when tension is high, guided by noise
+    if tension_level > 0.2 {
+        adjust_parameter(light_threshold, random_variation * exp(-tension_level))
+        // Exponential decay inspired by Langevin noise (Eq. 4)
+    }
 }
 
 resolution {
     constrain(light_threshold, 0.4, 0.9)
-    update_model(light_threshold)
+    update_model(light_threshold, -gradient(J_q, light_threshold))
+    // Gradient-based adjustment toward J(q) minimum
+    if tension_level < 0.1 {
+        reduce_drift_range(0.9)  // Stabilize with low tension
+    }
 }
