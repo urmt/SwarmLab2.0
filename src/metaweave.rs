@@ -15,6 +15,15 @@ impl Metaweave {
         }
     }
 
+    pub mod parser {
+    use std::collections::HashMap;
+
+    pub fn compute_gradient(_j_q: f32, _param: f32) -> f32 {
+        // Placeholder: Replace with finite differences or nalgebra
+        0.01 // Dummy gradient
+        }
+    }
+
     pub fn propose_new_primitives(&mut self) {
         let mut rng = rand::thread_rng();
         if rng.gen_bool(0.1) {
