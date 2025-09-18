@@ -7,7 +7,7 @@
 
 ## Overview
 
-SwarmLab2.0 is an experimental robotics programming environment built around **WeaveLang**, a sentience-first programming language designed to enable adaptive, emergent behavior in robot swarms. It integrates the **Sentience-Field Hypothesis (SFH)** (Section 4.3 of *The Sentience-Field Hypothesis: Consciousness as the Fabric of Reality* by Mark Rowe Traver, IngramSpark, 2025, ISBN: 978-0-123456-78-9), embedding the coherence-fertility functional \(J(q) = \alpha C(q) + \beta F(q)\) to model "sentient-aware" dynamics. The system comprises:
+SwarmLab2.0 is an experimental robotics programming environment built around **WeaveLang**, a sentience-first programming language designed to enable adaptive, emergent behavior in robot swarms. It integrates the **Sentience-Field Hypothesis (SFH)** (Section 4.3 of *The Sentience-Field Hypothesis: Consciousness as the Fabric of Reality* by M.R. Traver, 2025,  DOI 10.17605/OSF.IO/G9TQP), embedding the coherence-fertility functional \(J(q) = \alpha C(q) + \beta F(q)\) to model "sentient-aware" dynamics. The system comprises:
 
 - **WeaveLang Interpreter**: Implemented in Rust, supporting the tension-drift-resolution cycle, Metaweave neural extensions, and a new parser for qualic state management (e.g., \(C_q\), \(F_q\)).
 - **Godot 4.3 Integration**: Provides the simulation environment, physics, and agent actuation via NativeScript bindings.
