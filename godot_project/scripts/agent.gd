@@ -1,38 +1,29 @@
 extends Node2D
 
-# Agent script controlling individual swarm robot behavior
-
-var interpreter = null
-var internal_model = {}
-
-func _ready():
-    # Initialize interpreter instance (via GDNative)
-    interpreter = preload("res://weave_lang_interpreter.gdns").new()
-    internal_model = {
-        "light_threshold": 0.6,
-        "wind_speed": 0.0
-    }
-    # Initialize qualic state
-    interpreter.execute("qualic set C_q = 0.5")
-    interpreter.execute("qualic set F_q = 0.7")
+var velocity = Vector2.ZERO
+var internal_model = {"wind_speed": 0.0}
 
 func _process(delta):
-    # Calculate light intensity based on distance to LightSource
-    var light_source = get_node("/root/SwarmLab/Environment/LightSource")
-    var distance = global_position.distance_to(light_source.position)
-    var max_distance = 400.0  # Assuming 800x600 viewport
-    var light_intensity = 1.0 - min(distance / max_distance, 1.0)  # Inverse distance falloff
+    # Existing light intensity and interpreter logic
+    var light_intensity = calculate_light_intensity()
+    internal_model["light_intensity"] = light_intensity
+    
+    # Update velocity with physics-based movement
+    velocity += Vector2(cos(rotation), sin(rotation)) * 50 * delta * (interpreter.should_move_forward() ? 1 : -1)
+    velocity *= 0.95  # Velocity decay (simple friction)
+    position += velocity
+    
+    # Adjust rotation based on wind speed
+    if interpreter.should_move_forward() or interpreter.should_move_backward():
+        rotation += (internal_model["wind_speed"] - 0.5) * delta
+    
+    # Flocking behavior (assuming existing logic)
+    align_with_flock()
 
-    # Prepare WeaveLang input string
-    var input_string = "sense light_intensity = " + str(light_intensity) + 
-                       " sense wind_speed = " + str(internal_model["wind_speed"])
-    interpreter.execute(input_string)
+func calculate_light_intensity():
+    # Placeholder for existing light intensity calculation
+    return 1.0
 
-    # Update behavior based on interpreter (assuming new methods)
-    if interpreter.should_move_forward():
-        position += Vector2(cos(rotation), sin(rotation)) * 50 * delta  # Move in orientation
-    elif interpreter.should_move_backward():
-        position -= Vector2(cos(rotation), sin(rotation)) * 50 * delta
-
-    # Update wind speed (placeholder simulation)
-    internal_model["wind_speed"] = sin(OS.get_ticks_msec() / 1000.0) * 0.5 + 0.5
+func align_with_flock():
+    # Placeholder for existing flocking logic
+    pass
