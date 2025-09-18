@@ -2,15 +2,18 @@
 
 pub mod tension_cycle;
 pub mod metaweave;
+pub mod parser;
 
 use crate::tension_cycle::TensionCycle;
 use crate::metaweave::Metaweave;
+use crate::parser::Parser;
 use std::collections::HashMap;
 
 pub struct Interpreter {
     tension_cycle: TensionCycle,
     metaweave: Metaweave,
-    qualic_state: HashMap<String, f32>, // Track qualic parameters
+    parser: Parser,
+    model_parameter: f32,  // Exposed for wind influence
 }
 
 impl Interpreter {
@@ -18,46 +21,39 @@ impl Interpreter {
         Interpreter {
             tension_cycle: TensionCycle::new(),
             metaweave: Metaweave::new(),
-            qualic_state: HashMap::new(),
+            parser: Parser::new(),
+            model_parameter: 0.5,
         }
     }
 
-    pub fn should_move_forward(&self) -> bool {
-        self.tension_cycle.tension_level > 0.6 && self.tension_cycle.model_parameter < 0.5
-    }
-
-    pub fn should_move_backward(&self) -> bool {
-        self.tension_cycle.tension_level > 0.6 && self.tension_cycle.model_parameter > 0.5
-        }
-    }
-    
     pub fn execute(&mut self, input: &str) {
-        // Parse WeaveLang code (simplified parser)
         let mut lines = input.lines();
         for line in lines {
-            if line.starts_with("qualic ") {
-                self.parse_qualic(line);
+            if let Some(msg) = self.parser.parse(line) {
+                println!("{}", msg);
             } else {
-                self.tension_cycle.detect_tension(0.5); // Default sensed value
+                let c_q = *self.parser.qualic_state.get("C_q").unwrap_or(&0.5);
+                let f_q = *self.parser.qualic_state.get("F_q").unwrap_or(&0.7);
+                self.tension_cycle.detect_tension(0.5, c_q, f_q);
                 self.tension_cycle.drift();
-                self.tension_cycle.resolve(0.5);
+                self.tension_cycle.resolve(0.5, c_q, f_q);
                 self.metaweave.propose_new_primitives();
             }
         }
     }
 
-    fn parse_qualic(&mut self, line: &str) {
-        // Example: "qualic set C_q = 0.8" or "qualic partition kmax=10"
-        let parts: Vec<&str> = line.split_whitespace().collect();
-        if parts.len() >= 4 && parts[1] == "set" {
-            if let Ok(value) = parts[3].parse::<f32>() {
-                self.qualic_state.insert(parts[2].to_string(), value);
-                println!("Set qualic state {} = {}", parts[2], value);
-            }
-        } else if parts.len() >= 3 && parts[1] == "partition" {
-            if let Some(kmax) = parts[2].split('=').nth(1).and_then(|s| s.parse::<i32>().ok()) {
-                self.metaweave.update_partitions(kmax);
-            }
-        }
+    pub fn should_move_forward(&self) -> bool {
+        self.tension_cycle.tension_level > 0.6 && self.model_parameter < 0.5
+    }
+
+    pub fn should_move_backward(&self) -> bool {
+        self.tension_cycle.tension_level > 0.6 && self.model_parameter > 0.5
+    }
+
+    pub fn update_wind_influence(&mut self, wind_speed: f32) {
+        // Influence model_parameter with wind_speed (SFH-aligned adjustment)
+        self.model_parameter += (wind_speed - 0.5) * 0.1;  // Subtle drift from wind
+        self.model_parameter = self.model_parameter.clamp(0.0, 1.0);
+        println!("Wind influence updated model_parameter to {}", self.model_parameter);
     }
 }
