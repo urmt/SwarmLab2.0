@@ -26,7 +26,7 @@ SwarmLab2.0 is an experimental robotics programming environment built around **W
 - `weave_lang_programs/`: Sample WeaveLang agent programs (`swarm_agent.weave`, `metaweave_extensions.rs`).
 - `benchmarks/`: Performance evaluation scripts and results.
   - `benchmark_suite.py`: Python script comparing continuous vs. discretized runs.
-  - `benchmark_results.csv`: Output file with mean/std \(J(q)\), latency, and iterations.
+  - `benchmark_results.csv`: Generated output file with mean/std \(J(q)\), latency, and iterations (create manually or via script run).
 - `tests/`
   - `test_cycle.rs`: Tests for tension-drift-resolution cycle.
   - `test_partition.rs`: New tests for `qualic_partition.rs` accuracy.
@@ -67,6 +67,10 @@ SwarmLab2.0 is an experimental robotics programming environment built around **W
    - Navigate to `benchmarks/`:
      ```bash
      cd benchmarks
+     ```
+   - Initialize `benchmark_results.csv` (if not present):
+     ```bash
+     echo "mode,mean_j,std_j,latency,iterations" > benchmark_results.csv
      ```
    - Execute the benchmark script:
      ```bash
