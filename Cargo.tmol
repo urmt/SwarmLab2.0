@@ -1,24 +1,11 @@
 [package]
-name = "weave_lang"
-version = "0.1.1"
+name = "swarmlab"
+version = "0.1.0"
 edition = "2021"
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
 ndarray = "0.15"
 rand = "0.8"
-godot = { version = "0.9", features = ["serde"] }  # Godot-Rust bindings
 
 [dev-dependencies]
 approx = "0.5"
-
-[features]
-default = []
-gradient = ["ndarray"]
-parser = []
-
-
