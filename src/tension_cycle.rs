@@ -1,4 +1,4 @@
-use ndarray::{Array2, ArrayView2};
+use ndarray::{Array2, ArrayView2, s};
 use rand::distributions::{Distribution, Normal};
 use rand::thread_rng;
 use crate::qualic_partition::{compute_partition_peaks, discretize_to_peaks};
@@ -8,7 +8,7 @@ pub struct TensionCycle {
     noise_dist: Normal,
     alpha: f64,
     beta: f64,
-    peaks: Array1<f64>, // Added for partition peaks
+    peaks: Array1<f64>, // For partition peaks
 }
 
 impl TensionCycle {
